@@ -1,8 +1,5 @@
-import sys, os
-from PyQt5 import QtWidgets as qtw
-from PyQt5 import QtGui as qtg
-from PyQt5 import QtCore as qtc
-from components.StandardItem import StandardItem
+import os
+from src.components.folder_files_section.StandardItem import StandardItem
 
 
 class Directories():
@@ -19,7 +16,7 @@ class Directories():
                     ls.append(it.path.split('/')[-1])
         return ls
 
-    def get_standart_items(self, rootdir, include_hidden=False):
+    def get_standard_items(self, rootdir, include_hidden=False):
         dirs = self.get_dirs(rootdir)
         items = []
         for it in dirs:
