@@ -27,7 +27,7 @@ class MainWindow(qtw.QWidget):
         view_folders = FoldersTreeView(userDir)
         view_favorite_folders = FavoriteFoldersTreeView()
 
-        data = {'Filename': ['Mascota', 'Miss Monique', 'NCS', 'NCS Trap'],
+        data = {'Filename': ['Mascota', 'Miss Moniqueeeeeeeeeeeeeeeeeeeeeeeee', 'NCS', 'NCS Trap'],
                 'Size': ['59 123', '60 902', '4 504', '3 321'],
                 'Format': ['mp3', 'mp3', 'mp3', 'mp3'],
                 'Duration': ['1:11:13', '2:12:03', '4:54', '3:23']}
@@ -46,10 +46,8 @@ class MainWindow(qtw.QWidget):
         splitter2.addWidget(splitter1)
         splitter2.addWidget(view_files_in_folder)
 
-        layout_main.addWidget(splitter2)
-
         # Adding Section to main layout
-        #layout_main.addLayout(layout_selection)
+        layout_main.addWidget(splitter2)
 
         self.show()
 
