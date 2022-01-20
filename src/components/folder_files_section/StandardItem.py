@@ -1,6 +1,7 @@
 from PyQt5 import Qt as qt
 from PyQt5 import QtGui as qtg
 
+
 class StandardItem(qt.QStandardItem):
     def __init__(self, txt="", font_size=12, set_bold=False, color=qtg.QColor(0, 0, 0)):
         super().__init__()
