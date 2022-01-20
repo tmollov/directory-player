@@ -12,7 +12,7 @@ class FilesInFolderTable(qtw.QTableWidget):
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
         self.verticalHeader().hide()
-        self.horizontalHeader().setStretchLastSection(True)
+        #self.horizontalHeader().setStretchLastSection(True)
         self.setSelectionBehavior(qtw.QTableView.SelectRows)
         self.cellClicked.connect(self.row_click)
 
@@ -21,9 +21,14 @@ class FilesInFolderTable(qtw.QTableWidget):
 
     def setData(self):
         horHeaders = []
-        for n, key in enumerate(sorted(self.data.keys())):
+        for n, key in enumerate(self.data.keys()):
             horHeaders.append(key)
+            alignment = 0
+            if key == 'Duration' or key == 'Size':
+                alignment = qtc.Qt.AlignRight
+
             for m, item in enumerate(self.data[key]):
-                newitem = qtw.QTableWidgetItem(item)
-                self.setItem(m, n, newitem)
+                new_item = qtw.QTableWidgetItem(item)
+                new_item.setTextAlignment(alignment)
+                self.setItem(m, n, new_item)
         self.setHorizontalHeaderLabels(horHeaders)
