@@ -11,14 +11,14 @@ The only features I will implement is:
 
 ### Section: Folder select / file select
 
-![](https://raw.githubusercontent.com/tmollov/directory-player/main/readme_resources/section-folder-file.png?token=GHSAT0AAAAAABOX2QEBSA2N7E7UUQYFLBRSYPHFYAA)
+![](https://raw.githubusercontent.com/tmollov/directory-player/main/readme_resources/section-folder-file.png?token=GHSAT0AAAAAABOX2QEALDE6HVFOLHQ3US36YPHGQOQ)
 
 This section will contain views for folders which will come with predefined folders and files that are in selected folder.  
 You will able to add other folders manually in your *favorite folders* lists.
 
 ### Section: Selected file
 
-![](https://raw.githubusercontent.com/tmollov/directory-player/main/readme_resources/section-selected-file.png?token=GHSAT0AAAAAABOX2QEB3DTVFQX5YM7PJWH6YPHFYMQ)
+![](https://raw.githubusercontent.com/tmollov/directory-player/main/readme_resources/section-selected-file.png?token=GHSAT0AAAAAABOX2QEB23V5XERM3B74MOZUYPHGQZA)
 
 This section will contain view for currently selected file and its metadata like artwork, file name, file metadata and duration.
 
