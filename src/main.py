@@ -2,27 +2,45 @@ import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
+from PyQt5 import Qt as qt
 
-from src.components.folder_files_section.FavoriteFoldersTreeView import FavoriteFoldersTreeView
-from src.components.folder_files_section.FilesInFolderTable import FilesInFolderTable
 from src.components.folder_files_section.FolderAndFilesView import FolderAndFilesView
-from src.components.folder_files_section.FoldersTreeView import FoldersTreeView
+from src.components.folder_files_section.StandardItem import StandardItem
+from src.directories import Directories
 
 homeDir = "/home"
 userDir = homeDir + "/tmollov"
 
+from src.dp_gui import Ui_MainWindow
 
-class MainWindow(qtw.QWidget):
+class MainWindow(qtw.QMainWindow, Ui_MainWindow):
+    def __init__(self, *args, **kwargs):
+        super(MainWindow, self).__init__(*args, **kwargs)
+        self.show()
+        self.setupUi(self)
+        self.folders_setup()
 
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Directory player")
-        self.setMinimumSize(400, 300)
+    def folders_setup(self):
+        self.folders.setHeaderHidden(True)
+        tree_model = qt.QStandardItemModel()
+        root_node = tree_model.invisibleRootItem()
 
-        # Main Layout - VBox
-        layout_main = qtw.QVBoxLayout()
-        self.setLayout(layout_main)
+        root_item = StandardItem(userDir)
 
+        ls = Directories().get_standard_items(userDir)
+
+        for item in ls:
+            root_item.appendRow(item)
+
+        root_node.appendRow(root_item)
+
+        self.folders.setModel(tree_model)
+        self.folders.expandAll()
+
+    def files_setup(self):
+        pass
+
+    def old_init(self):
         # Folders / Files section
         data = {'Filename': ['Mascota', 'Miss Moniqueeeeeeeeeeeeeeeeeeeeeeeee', 'NCS', 'NCS Trap'],
                 'Size': ['59 123', '60 902', '4 504', '3 321'],
@@ -30,45 +48,6 @@ class MainWindow(qtw.QWidget):
                 'Duration': ['1:11:13', '2:12:03', '4:54', '3:23']}
 
         folder_and_file_section = FolderAndFilesView(userDir, data)
-
-        # Player section
-        hbox = qtw.QHBoxLayout()
-
-        image = qtg.QPixmap("../test_img.jpg")
-        text_image = qtw.QLabel("image")
-        text_image.setPixmap(image)
-
-        hbox.addWidget(text_image)
-
-        vert = qtw.QVBoxLayout()
-        vert1 = qtw.QVBoxLayout()
-        hbox1 = qtw.QHBoxLayout()
-        vert.addLayout(vert1)
-        vert.addLayout(hbox1)
-
-        text_name = qtw.QLabel("#FILENAME")
-        text_name.setAlignment(qtc.Qt.AlignLeft)
-
-        text_meta = qtw.QLabel("#METADATAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        text_meta.setAlignment(qtc.Qt.AlignLeft)
-        vert1.addWidget(text_name)
-        vert1.addWidget(text_meta)
-
-        text_time = qtw.QLabel("[ 11:11 / 22:22]")
-        text_time.setAlignment(qtc.Qt.AlignLeft)
-        repeat_btn = qtw.QPushButton("Repeat")
-        widg = qtw.QWidget()
-        hbox1.addWidget(text_time)
-        hbox1.addWidget(widg)
-        hbox1.addWidget(repeat_btn)
-
-        hbox.addLayout(vert)
-
-        # Adding Sections to main layout
-        layout_main.addWidget(folder_and_file_section)
-        layout_main.addLayout(hbox)
-
-        self.show()
 
 
 if __name__ == "__main__":
