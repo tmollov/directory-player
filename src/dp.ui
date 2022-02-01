@@ -82,7 +82,7 @@
          <enum>Qt::PlainText</enum>
         </property>
         <property name="pixmap">
-         <pixmap resource="resources.qrc">:/artwork/test.jpg</pixmap>
+         <pixmap>:/artwork/sample.jpg</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -232,16 +232,19 @@
       </property>
       <widget class="QSplitter" name="splitter_1">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="minimumSize">
+       <property name="baseSize">
         <size>
-         <width>256</width>
-         <height>346</height>
+         <width>0</width>
+         <height>0</height>
         </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -258,8 +261,8 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>640</width>
-         <height>480</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <column>
@@ -319,15 +322,19 @@
        <cursorShape>OpenHandCursor</cursorShape>
       </property>
       <property name="text">
-       <string>play / pause</string>
+       <string>Play</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
