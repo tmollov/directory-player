@@ -18,6 +18,8 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.audio_player = qt.QMediaPlayer()
 
+        self.repeat_audio = False
+
         # Model-View
         self.folders_sm = qtw.QFileSystemModel()
         self.folders_sm.setRootPath(userDir)
@@ -33,8 +35,15 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.folders_setup()
         self.files_setup()
 
-    def folders_setup(self):
+        self.button_repeat.clicked.connect(self.repeat_media)
+        self.audio_player.mediaStatusChanged.connect(self.is_repeat_active)
 
+    def is_repeat_active(self, status: qt.QMediaPlayer.MediaStatus):
+        print(status)
+        if status == 7 and self.repeat_audio is True:
+            self.audio_player.play()
+
+    def folders_setup(self):
         # Folders props
         self.folders.setModel(self.folders_sm)
         self.folders.setRootIndex(self.folders_sm.index(userDir))
@@ -47,30 +56,30 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.files.clicked.connect(self.play_file)
         self.button_play.clicked.connect(self.play_pause)
 
-        self.audio_player.mediaChanged.connect(self.change_audio)
-
-    def change_audio(self, media):
-        print(media)
-
     # TODO: Implement auto button checked state switch when files are selected
     def play_pause(self):
-        if (self.audio_player.isAvailable()):
-            if (self.button_play.isChecked() == True):
-                self.audio_player.play()
-                self.button_play.setText("Pause")
-            else:
-                self.audio_player.pause()
-                self.button_play.setText("Play")
+        if self.button_play.isChecked():
+            self.audio_player.play()
+            self.button_play.setText("Pause")
+        else:
+            self.audio_player.pause()
+            self.button_play.setText("Play")
+
+    def repeat_media(self):
+        self.repeat_audio = not self.repeat_audio
+        print(self.repeat_audio)
 
     def play_file(self, index):
-        filePath = self.get_file_path(index, self.files_sm)
-        self.audio_player.setMedia(qt.QMediaContent(qt.QUrl.fromLocalFile(filePath)))
-        self.button_play.click()
+        file_path = self.get_file_path(index, self.files_sm)
+        self.audio_player.setMedia(qt.QMediaContent(qt.QUrl.fromLocalFile(file_path)))
+
+        if self.button_play.isChecked() != True:
+            self.button_play.click()
+
+        self.audio_player.play()
 
     def show_files(self, index):
-        filePath = self.get_file_path(index, self.folders_sm)
         path = self.sender().model().filePath(index)
-
         self.files.setRootIndex(self.files_sm.setRootPath(path))
 
     def get_file_path(self, index, model):
@@ -82,6 +91,10 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.files.setModel(self.files_sm)
         select_mode = qt.QAbstractItemView.SelectionMode(qt.QAbstractItemView.SelectRows)
         self.files.setSelectionMode(select_mode)
+
+        self.files.hideColumn(1)
+        self.files.hideColumn(2)
+        self.files.hideColumn(3)
 
 
 if __name__ == "__main__":
