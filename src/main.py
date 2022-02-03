@@ -17,6 +17,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.show()
         self.setupUi(self)
         self.audio_player = qt.QMediaPlayer()
+        self.duration = 0
 
         self.repeat_audio = False
 
@@ -36,13 +37,66 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.files_setup()
 
         self.button_repeat.clicked.connect(self.repeat_media)
-        self.audio_player.mediaStatusChanged.connect(self.is_repeat_active)
+        self.audio_player.mediaStatusChanged.connect(self.player_status_change)
+        self.audio_player.positionChanged.connect(self.current_position)
 
-    def is_repeat_active(self, status: qt.QMediaPlayer.MediaStatus):
+    def current_position(self,position):
+        pos = self.convert_duration(position)
+        self.player_time.setText(f'[{pos} / {self.duration}]')
+
+    def player_status_change(self, status: qt.QMediaPlayer.MediaStatus):
         print(status)
+        if status == 6:
+            self.duration = self.convert_duration(self.audio_player.duration())
+            self.player_time.setText(self.duration)
         if status == 7 and self.repeat_audio is True:
             self.audio_player.play()
 
+    def convert_duration(self, millis):
+        seconds = str(int((millis / 1000) % 60)).zfill(2)
+        minutes = str(int((millis / (1000 * 60)) % 60)).zfill(2)
+        hours = int((millis / (1000 * 60 * 60)) % 24)
+        if hours < 1:
+            return f'{minutes}:{seconds}'
+        return f'{hours}:{minutes}:{seconds}'
+
+    def play_pause(self):
+        if self.button_play.isChecked():
+            self.audio_player.play()
+            self.button_play.setText("Pause")
+        else:
+            self.audio_player.pause()
+            self.button_play.setText("Play")
+
+    def repeat_media(self):
+        self.repeat_audio = not self.repeat_audio
+
+    def play_file(self, index):
+        file_path = self.get_file_path(index, self.files_sm)
+        self.audio_player.setMedia(qt.QMediaContent(qt.QUrl.fromLocalFile(file_path)))
+
+        if self.button_play.isChecked() != True:
+            self.button_play.click()
+
+        self.player_filename.setText(self.get_file_name(index, self.files_sm))
+
+        self.audio_player.play()
+
+    def show_files(self, index):
+        path = self.sender().model().filePath(index)
+        self.files.setRootIndex(self.files_sm.setRootPath(path))
+
+    def get_file_path(self, index, model):
+        index_item = model.index(index.row(), 0, index.parent())
+        file_path = model.filePath(index_item)
+        return file_path
+
+    def get_file_name(self, index, model):
+        index_item = model.index(index.row(), 0, index.parent())
+        file_name = model.fileName(index_item)
+        return file_name
+
+    # SETUP
     def folders_setup(self):
         # Folders props
         self.folders.setModel(self.folders_sm)
@@ -55,37 +109,6 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.folders.clicked.connect(self.show_files)
         self.files.clicked.connect(self.play_file)
         self.button_play.clicked.connect(self.play_pause)
-
-    # TODO: Implement auto button checked state switch when files are selected
-    def play_pause(self):
-        if self.button_play.isChecked():
-            self.audio_player.play()
-            self.button_play.setText("Pause")
-        else:
-            self.audio_player.pause()
-            self.button_play.setText("Play")
-
-    def repeat_media(self):
-        self.repeat_audio = not self.repeat_audio
-        print(self.repeat_audio)
-
-    def play_file(self, index):
-        file_path = self.get_file_path(index, self.files_sm)
-        self.audio_player.setMedia(qt.QMediaContent(qt.QUrl.fromLocalFile(file_path)))
-
-        if self.button_play.isChecked() != True:
-            self.button_play.click()
-
-        self.audio_player.play()
-
-    def show_files(self, index):
-        path = self.sender().model().filePath(index)
-        self.files.setRootIndex(self.files_sm.setRootPath(path))
-
-    def get_file_path(self, index, model):
-        indexItem = model.index(index.row(), 0, index.parent())
-        filePath = model.filePath(indexItem)
-        return filePath
 
     def files_setup(self):
         self.files.setModel(self.files_sm)
