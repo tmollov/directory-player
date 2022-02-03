@@ -211,6 +211,9 @@
             <property name="text">
              <string>Repeat track</string>
             </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
             <property name="autoDefault">
              <bool>false</bool>
             </property>
@@ -223,6 +226,16 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QSlider" name="time_slider">
+          <property name="maximum">
+           <number>60</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -241,6 +254,9 @@
       </property>
       <property name="text">
        <string>Mute</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -293,7 +309,7 @@
        <widget class="QTreeView" name="folders"/>
        <widget class="QTreeView" name="favorites"/>
       </widget>
-      <widget class="QTableView" name="files"/>
+      <widget class="QListView" name="files"/>
      </widget>
     </item>
    </layout>
