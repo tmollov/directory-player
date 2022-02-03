@@ -171,16 +171,16 @@
           <item>
            <widget class="QLabel" name="player_time">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="text">
-             <string>[ 212:131 / 1231:231]</string>
+             <string>[  /  ]</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
             </property>
            </widget>
           </item>
@@ -195,7 +195,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="button_repeat">
+           <widget class="QPushButton" name="button_repeat_track">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -209,7 +209,7 @@
              <enum>Qt::LeftToRight</enum>
             </property>
             <property name="text">
-             <string>Repeat</string>
+             <string>Repeat track</string>
             </property>
             <property name="autoDefault">
              <bool>false</bool>
