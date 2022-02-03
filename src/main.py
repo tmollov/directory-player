@@ -36,11 +36,11 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.folders_setup()
         self.files_setup()
 
-        self.button_repeat.clicked.connect(self.repeat_media)
+        self.button_repeat_track.clicked.connect(self.repeat_media)
         self.audio_player.mediaStatusChanged.connect(self.player_status_change)
         self.audio_player.positionChanged.connect(self.current_position)
 
-    def current_position(self,position):
+    def current_position(self, position):
         pos = self.convert_duration(position)
         self.player_time.setText(f'[{pos} / {self.duration}]')
 
