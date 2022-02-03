@@ -39,8 +39,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.button_repeat_track.clicked.connect(self.repeat_media)
         self.audio_player.mediaStatusChanged.connect(self.player_status_change)
         self.audio_player.positionChanged.connect(self.current_position)
-        self.audio_player.positionChanged.connect(self.update_slider)
-        self.time_slider.valueChanged.connect(self.change_position)
+        self.time_slider.valueChanged.connect(self.audio_player.setPosition)
         self.files.clicked.connect(self.play_file)
         self.button_play.clicked.connect(self.play_pause)
         self.button_mute.clicked.connect(self.mute_audio)
@@ -50,9 +49,6 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.audio_player.setMuted(True)
         else:
             self.audio_player.setMuted(False)
-
-    def update_slider(self, val):
-        self.time_slider.setValue(val)
 
     def change_position(self, val):
         self.audio_player.setPosition(val)
