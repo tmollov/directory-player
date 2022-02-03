@@ -44,6 +44,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
 
         # Signals
         self.folders.clicked.connect(self.show_files)
+        self.files.clicked.connect(self.play_file)
         self.button_play.clicked.connect(self.play_pause)
 
         self.audio_player.mediaChanged.connect(self.change_audio)
@@ -61,26 +62,26 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
                 self.audio_player.pause()
                 self.button_play.setText("Play")
 
+    def play_file(self, index):
+        filePath = self.get_file_path(index, self.files_sm)
+        self.audio_player.setMedia(qt.QMediaContent(qt.QUrl.fromLocalFile(filePath)))
+        self.button_play.click()
+
     def show_files(self, index):
-        indexItem = self.folders_sm.index(index.row(), 0, index.parent())
-        # fileName = self.file_system_model.fileName(indexItem)
-        filePath = self.folders_sm.filePath(indexItem)
-
-        print(filePath)
-
-        m = self.sender().model()
+        filePath = self.get_file_path(index, self.folders_sm)
         path = self.sender().model().filePath(index)
 
         self.files.setRootIndex(self.files_sm.setRootPath(path))
-        # if(os.path.isfile(filePath)):
-        #    self.audio_player.setMedia(qt.QMediaContent(qt.QUrl.fromLocalFile(filePath)))
-        #    self.button_play.click()
 
-        # print(path)
+    def get_file_path(self, index, model):
+        indexItem = model.index(index.row(), 0, index.parent())
+        filePath = model.filePath(indexItem)
+        return filePath
 
-    # TODO
     def files_setup(self):
         self.files.setModel(self.files_sm)
+        select_mode = qt.QAbstractItemView.SelectionMode(qt.QAbstractItemView.SelectRows)
+        self.files.setSelectionMode(select_mode)
 
 
 if __name__ == "__main__":
