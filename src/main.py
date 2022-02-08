@@ -6,9 +6,15 @@ from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
 from PyQt5 import Qt as qt
 
-homeDir = "/home"
-f = open('settings.json')
-userDir = homeDir + json.load(f)["userDir"]
+homeDir = ""
+userDir = homeDir + ""
+
+try:
+    f = open('settings.json')
+    userDir = homeDir + json.load(f)["userDir"]
+except:
+    print("Something went wrong when opening the file")
+
 print(userDir)
 
 from dp_gui import Ui_MainWindow
@@ -60,7 +66,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
 
     def next_music(self):
         current_row = self.files.currentIndex().row()
-        #self.files.row
+        # self.files.row
 
     def mute_audio(self):
         if self.button_mute.isChecked():
