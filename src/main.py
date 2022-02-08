@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 from PyQt5 import QtWidgets as qtw
@@ -6,9 +7,11 @@ from PyQt5 import QtCore as qtc
 from PyQt5 import Qt as qt
 
 homeDir = "/home"
-userDir = homeDir + "/tmollov/Downloads"
+f = open('settings.json')
+userDir = homeDir + json.load(f)["userDir"]
+print(userDir)
 
-from src.dp_gui import Ui_MainWindow
+from dp_gui import Ui_MainWindow
 
 
 class MainWindow(qtw.QMainWindow, Ui_MainWindow):
@@ -17,6 +20,8 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.show()
         self.setupUi(self)
         self.audio_player = qt.QMediaPlayer()
+        self.playlist = qt.QMediaPlaylist()
+        self.audio_player.setPlaylist(self.playlist)
         self.duration = 0
 
         self.repeat_audio = False
@@ -39,10 +44,23 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.button_repeat_track.clicked.connect(self.repeat_media)
         self.audio_player.mediaStatusChanged.connect(self.player_status_change)
         self.audio_player.positionChanged.connect(self.current_position)
+        self.audio_player.positionChanged.connect(self.update_position)
         self.time_slider.valueChanged.connect(self.audio_player.setPosition)
         self.files.clicked.connect(self.play_file)
         self.button_play.clicked.connect(self.play_pause)
         self.button_mute.clicked.connect(self.mute_audio)
+
+        self.button_next.clicked.connect(self.next_music)
+
+    def keyPressEvent(self, event):
+        if event.key() == qtc.Qt.Key_Space:
+            print("pressed")
+            print(event)
+            self.play_pause()
+
+    def next_music(self):
+        current_row = self.files.currentIndex().row()
+        #self.files.row
 
     def mute_audio(self):
         if self.button_mute.isChecked():
@@ -50,8 +68,11 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         else:
             self.audio_player.setMuted(False)
 
-    def change_position(self, val):
-        self.audio_player.setPosition(val)
+    def update_position(self, position):
+        # Disable the events to prevent updating triggering a setPosition event (can cause stuttering).
+        self.time_slider.blockSignals(True)
+        self.time_slider.setValue(position)
+        self.time_slider.blockSignals(False)
 
     def current_position(self, position):
         pos = self.convert_duration_to_str(position)
@@ -98,24 +119,25 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         if not self.button_play.isChecked():
             self.button_play.click()
 
-        self.player_filename.setText(self.get_file_name(index, self.files_sm))
+        file_name = self.get_file_name(index, self.files_sm).replace(".mp3", "")
+        self.player_filename.setText(file_name)
 
         self.audio_player.play()
 
     def show_files(self, index):
         path = self.sender().model().filePath(index)
-
+        self.playlist.addMedia(qt.QMediaContent(qt.QUrl.fromLocalFile(path)))
         self.files.setRootIndex(self.files_sm.setRootPath(path))
         self.files_sm.setFilter(qt.QDir.Files)
         self.files_sm.setNameFilters(["*.mp3"])
         self.files_sm.setNameFilterDisables(False)
 
-    def get_file_path(self, index, model):
+    def get_file_path(self, index, model) -> str:
         index_item = model.index(index.row(), 0, index.parent())
         file_path = model.filePath(index_item)
         return file_path
 
-    def get_file_name(self, index, model):
+    def get_file_name(self, index, model) -> str:
         index_item = model.index(index.row(), 0, index.parent())
         file_name = model.fileName(index_item)
         return file_name
